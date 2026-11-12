@@ -33,7 +33,7 @@ async function main(){
  const clock=new THREE.Clock();let mixer=null;const actions={};
  let frames=0;function frame(){requestAnimationFrame(frame);try{const delta=Math.min(clock.getDelta(),.05);mixer?.update(delta);controls.update();renderer.render(scene,camera);frames++}catch(e){if(frames>=0){frames=-999999;fail(e)}}}frame();
  report('WebGL töötab. Alustan GLB eraldi allalaadimist…');
- const url='./beastkin_v2.glb?fix=5';const controller=new AbortController();const abort=setTimeout(()=>controller.abort(),30000);
+ const url='https://ekkuqq.github.io/Mutant-lab/beastkin-v2/beastkin_v2.glb';const controller=new AbortController();const abort=setTimeout(()=>controller.abort(),30000);
  let response,buffer;try{
    response=await fetch(url,{cache:'no-store',signal:controller.signal});
    report('HTTP staatus: '+response.status+' '+response.statusText+'; tüüp: '+(response.headers.get('content-type')||'teadmata'));
