@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="et"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Mutant Lab · Beastkin V2 FIX 5</title>
+<html lang="et"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Mutant Lab · Beastkin V2 FIX 6</title>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/"}}</script>
 <style>*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% 35%,#2a1550,#090615 75%);color:#f5eaff;font:15px system-ui,sans-serif}header{text-align:center;padding:20px 10px 8px}h2{color:#ebbaff;margin:0 0 5px;font-size:clamp(20px,4vw,27px)}#stage{height:min(68vh,720px);min-height:330px;position:relative;touch-action:none;overflow:hidden}#stage canvas{display:block;width:100%;height:100%}#status{position:absolute;left:12px;right:12px;bottom:12px;z-index:3;text-align:center;padding:10px 12px;border-radius:10px;background:#1b1034dd;white-space:pre-wrap;font-size:13px;pointer-events:none}nav{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;padding:12px}button{background:#342052;color:white;border:1px solid #a35ce1;border-radius:11px;padding:12px 15px;cursor:pointer}button:disabled{opacity:.5}small{display:block;text-align:center;color:#c5a7df;padding:0 10px 20px}#diagnostics{max-width:850px;margin:12px auto;padding:10px 15px;color:#cab2df;font-size:12px;line-height:1.5;overflow-wrap:anywhere}#diagnostics summary{cursor:pointer}#log{white-space:pre-wrap;max-height:300px;overflow:auto}#fallback{position:absolute;inset:0;display:none;align-items:center;justify-content:center;text-align:center;padding:30px;color:#ffccdd}</style></head><body>
-<header><h2>🧬 MUTANT LAB: GENESIS</h2>Beastkin V2 · Interactive 3D · FIX 5</header>
+<header><h2>🧬 MUTANT LAB: GENESIS</h2>Beastkin V2 · Interactive 3D · FIX 6</header>
 <div id="stage"><div id="fallback"></div><div id="status" role="status" aria-live="polite">Alustan…</div></div>
 <nav><button data-a="Idle_Breathe" disabled>Hingamine</button><button data-a="Attack_Lunge" disabled>Rünnak</button><button data-a="Victory_Bounce" disabled>Võit</button><button data-a="Look_Around" disabled>Uudishimu</button></nav>
 <small>Keera mutanti hiire või sõrmega · suumi kahe sõrmega</small>
@@ -13,7 +13,7 @@ function report(message){statusEl.textContent=message;logEl.textContent+='\n'+ne
 document.getElementById('copy').onclick=()=>navigator.clipboard.writeText(logEl.textContent).then(()=>report('Diagnostika kopeeritud')).catch(()=>report('Kopeerimine ebaõnnestus'));
 window.addEventListener('error',e=>report('JS VIGA: '+(e.message||'tundmatu')));
 window.addEventListener('unhandledrejection',e=>report('PROMISE VIGA: '+String(e.reason?.stack||e.reason)));
-report('FIX 5 HTML käivitus');
+report('FIX 6 HTML käivitus');
 </script>
 <script type="module">
 const host=document.getElementById('stage'),fallback=document.getElementById('fallback');
@@ -33,13 +33,37 @@ async function main(){
  const clock=new THREE.Clock();let mixer=null;const actions={};
  let frames=0;function frame(){requestAnimationFrame(frame);try{const delta=Math.min(clock.getDelta(),.05);mixer?.update(delta);controls.update();renderer.render(scene,camera);frames++}catch(e){if(frames>=0){frames=-999999;fail(e)}}}frame();
  report('WebGL töötab. Alustan GLB eraldi allalaadimist…');
- const url='https://ekkuqq.github.io/Mutant-lab/beastkin-v2/beastkin_v2.glb';const controller=new AbortController();const abort=setTimeout(()=>controller.abort(),30000);
- let response,buffer;try{
-   response=await fetch(url,{cache:'no-store',signal:controller.signal});
-   report('HTTP staatus: '+response.status+' '+response.statusText+'; tüüp: '+(response.headers.get('content-type')||'teadmata'));
-   if(!response.ok)throw Error('GLB HTTP '+response.status);
-   buffer=await response.arrayBuffer();
- }finally{clearTimeout(abort)}
+ const url='https://ekkuqq.github.io/Mutant-lab/beastkin-v2/beastkin_v2.glb';
+ report('GLB aadress: '+url);
+ async function downloadGLB(){
+   const controller=new AbortController();let timer;
+   const resetTimeout=()=>{clearTimeout(timer);timer=setTimeout(()=>controller.abort('GLB andmevoog ei edenenud 12 sekundit'),12000)};
+   resetTimeout();
+   try{
+     const response=await fetch(url+'?v=6',{cache:'no-store',signal:controller.signal});
+     report('HTTP staatus: '+response.status+'; tüüp: '+(response.headers.get('content-type')||'teadmata'));
+     if(!response.ok)throw Error('GLB HTTP '+response.status);
+     const expected=Number(response.headers.get('content-length'))||0;
+     report('Content-Length: '+(expected||'puudub')+' baiti; stream: '+Boolean(response.body));
+     if(!response.body){report('Voog puudub, kasutan arrayBuffer()');return await response.arrayBuffer()}
+     const reader=response.body.getReader();let received=0,lastReport=0;const chunks=[];
+     while(true){
+       const {done,value}=await reader.read();
+       if(done)break;
+       resetTimeout();
+       if(value?.length){chunks.push(value);received+=value.length;
+         if(received-lastReport>=32768||received===expected){report('Saadud '+received+(expected?' / '+expected:'')+' baiti');lastReport=received}
+       }
+       if(received>30_000_000)throw Error('GLB üle 30 MB; katkestan');
+     }
+     report('Andmevoog lõppes. Kokku '+received+' baiti');
+     if(expected&&received!==expected)throw Error('Puudulik vastus: '+received+' / '+expected+' baiti');
+     const bytes=new Uint8Array(received);let offset=0;
+     for(const chunk of chunks){bytes.set(chunk,offset);offset+=chunk.length}
+     return bytes.buffer;
+   }finally{clearTimeout(timer);controller.abort()}
+ }
+ let buffer=await downloadGLB();
  report('GLB alla laaditud: '+buffer.byteLength+' baiti');
  if(buffer.byteLength<20)throw Error('GLB liiga väike');
  const view=new DataView(buffer);const magic=view.getUint32(0,true),version=view.getUint32(4,true),declared=view.getUint32(8,true);
