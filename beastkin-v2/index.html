@@ -1,75 +1,64 @@
 <!doctype html>
-<html lang="et"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Mutant Lab · Beastkin V2 parandatud</title>
+<html lang="et"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Mutant Lab · Beastkin V2 FIX 5</title>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/"}}</script>
-<style>
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% 35%,#2a1550,#090615 75%);color:#f5eaff;font:15px system-ui,sans-serif}header{text-align:center;padding:20px 10px 8px}h2{color:#ebbaff;margin:0 0 5px;font-size:clamp(20px,4vw,27px)}#stage{height:min(68vh,720px);min-height:330px;position:relative;touch-action:none;overflow:hidden}#stage canvas{display:block;width:100%;height:100%}#status{position:absolute;left:12px;right:12px;bottom:12px;z-index:3;text-align:center;padding:10px 12px;border-radius:10px;background:#1b1034dd;white-space:pre-wrap;font-size:13px;pointer-events:none}nav{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;padding:12px}button{background:#342052;color:white;border:1px solid #a35ce1;border-radius:11px;padding:12px 15px;cursor:pointer}button:disabled{opacity:.5}small{display:block;text-align:center;color:#c5a7df;padding:0 10px 20px}#diagnostics{max-width:800px;margin:12px auto;padding:10px 15px;color:#cab2df;font-size:12px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}#diagnostics summary{cursor:pointer}#fallback{position:absolute;inset:0;display:none;align-items:center;justify-content:center;text-align:center;padding:30px;color:#ffccdd}
-</style></head><body>
-<header><h2>🧬 MUTANT LAB: GENESIS</h2>Beastkin V2 · Interactive 3D · FIX 4</header>
-<div id="stage"><div id="fallback"></div><div id="status" role="status" aria-live="polite">Leht avatud. Alustan…</div></div>
+<style>*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% 35%,#2a1550,#090615 75%);color:#f5eaff;font:15px system-ui,sans-serif}header{text-align:center;padding:20px 10px 8px}h2{color:#ebbaff;margin:0 0 5px;font-size:clamp(20px,4vw,27px)}#stage{height:min(68vh,720px);min-height:330px;position:relative;touch-action:none;overflow:hidden}#stage canvas{display:block;width:100%;height:100%}#status{position:absolute;left:12px;right:12px;bottom:12px;z-index:3;text-align:center;padding:10px 12px;border-radius:10px;background:#1b1034dd;white-space:pre-wrap;font-size:13px;pointer-events:none}nav{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;padding:12px}button{background:#342052;color:white;border:1px solid #a35ce1;border-radius:11px;padding:12px 15px;cursor:pointer}button:disabled{opacity:.5}small{display:block;text-align:center;color:#c5a7df;padding:0 10px 20px}#diagnostics{max-width:850px;margin:12px auto;padding:10px 15px;color:#cab2df;font-size:12px;line-height:1.5;overflow-wrap:anywhere}#diagnostics summary{cursor:pointer}#log{white-space:pre-wrap;max-height:300px;overflow:auto}#fallback{position:absolute;inset:0;display:none;align-items:center;justify-content:center;text-align:center;padding:30px;color:#ffccdd}</style></head><body>
+<header><h2>🧬 MUTANT LAB: GENESIS</h2>Beastkin V2 · Interactive 3D · FIX 5</header>
+<div id="stage"><div id="fallback"></div><div id="status" role="status" aria-live="polite">Alustan…</div></div>
 <nav><button data-a="Idle_Breathe" disabled>Hingamine</button><button data-a="Attack_Lunge" disabled>Rünnak</button><button data-a="Victory_Bounce" disabled>Võit</button><button data-a="Look_Around" disabled>Uudishimu</button></nav>
-<small>Keera mutanti sõrmega · suumi kahe sõrmega</small>
-<details id="diagnostics"><summary>Diagnostika (vajuta, kui mudel ei ilmu)</summary><div id="log">Ootan…</div></details>
+<small>Keera mutanti hiire või sõrmega · suumi kahe sõrmega</small>
+<details id="diagnostics" open><summary>Diagnostika (avatud automaatselt)</summary><div id="log"></div><button id="copy" type="button">Kopeeri diagnostika</button></details>
 <script>
-const statusEl=document.getElementById('status');const logEl=document.getElementById('log');
+const statusEl=document.getElementById('status'),logEl=document.getElementById('log');
 function report(message){statusEl.textContent=message;logEl.textContent+='\n'+new Date().toLocaleTimeString()+' '+message;console.log('[Beastkin V2]',message)}
-logEl.textContent='';report('HTML käivitus. Kontrollin 3D tuge…');
-window.addEventListener('error',e=>report('JavaScripti viga: '+(e.message||'tundmatu')));
-window.addEventListener('unhandledrejection',e=>report('Asünkroonne viga: '+String(e.reason?.message||e.reason)));
+document.getElementById('copy').onclick=()=>navigator.clipboard.writeText(logEl.textContent).then(()=>report('Diagnostika kopeeritud')).catch(()=>report('Kopeerimine ebaõnnestus'));
+window.addEventListener('error',e=>report('JS VIGA: '+(e.message||'tundmatu')));
+window.addEventListener('unhandledrejection',e=>report('PROMISE VIGA: '+String(e.reason?.stack||e.reason)));
+report('FIX 5 HTML käivitus');
 </script>
 <script type="module">
-const host=document.getElementById('stage');const fallback=document.getElementById('fallback');
-let THREE,OrbitControls,GLTFLoader,renderer,scene,camera,controls,mixer,actions={},clock;
-function fail(message){report('VIGA: '+message);fallback.style.display='flex';fallback.textContent='3D ei käivitunud. Ava all Diagnostika ja saada selle tekst.'}
-try {
-  report('Laadin Three.js mooduleid…');
-  THREE=await import('three');
-  ({OrbitControls}=await import('three/addons/controls/OrbitControls.js'));
-  ({GLTFLoader}=await import('three/addons/loaders/GLTFLoader.js'));
-  report('3D moodulid laaditud. Kontrollin WebGL-i…');
-  const testCanvas=document.createElement('canvas');
-  const gl=testCanvas.getContext('webgl2')||testCanvas.getContext('webgl');
-  if(!gl)throw new Error('Brauser ei võimalda WebGL-i. Kontrolli Brave graafikaseadeid.');
-  report('WebGL olemas. Loon renderdaja…');
-  renderer=new THREE.WebGLRenderer({antialias:true,alpha:true,powerPreference:'default'});
-  renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));
-  renderer.setSize(Math.max(host.clientWidth,1),Math.max(host.clientHeight,1));
-  renderer.outputColorSpace=THREE.SRGBColorSpace;
-  host.insertBefore(renderer.domElement,fallback);
-  report('Renderdaja loodud. Seadistan stseeni…');
-  scene=new THREE.Scene();
-  camera=new THREE.PerspectiveCamera(40,Math.max(host.clientWidth,1)/Math.max(host.clientHeight,1),.01,1000);
-  camera.position.set(3,2.2,4); // GLB standard: Y is up
-  scene.add(new THREE.HemisphereLight(0xe3d8ff,0x3b2255,2.2));
-  const key=new THREE.DirectionalLight(0xffffff,2.8);key.position.set(3,6,5);scene.add(key);
-  const fill=new THREE.DirectionalLight(0x77fff1,1);fill.position.set(-3,2,-3);scene.add(fill);
-  controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.minDistance=.2;controls.maxDistance=100;
-  clock=new THREE.Clock();
-  function frame(){requestAnimationFrame(frame);const delta=Math.min(clock.getDelta(),.05);if(mixer)mixer.update(delta);controls.update();renderer.render(scene,camera)}
-  frame();
-  report('3D töötab. Laadin beastkin_v2.glb…');
-  let completed=false;
-  const timeout=setTimeout(()=>{if(!completed)report('GLB laadimine kestab üle 20 sekundi. Kontrolli võrku ja Diagnostikat.')},20000);
-  new GLTFLoader().load('./beastkin_v2.glb',g=>{
-    completed=true;clearTimeout(timeout);
-    try{
-      const model=g.scene;
-      if(!model)throw new Error('GLB failis puudub stseen');
-      scene.add(model);model.updateMatrixWorld(true);
-      const box=new THREE.Box3().setFromObject(model);
-      if(box.isEmpty())throw new Error('GLB mudelil pole nähtavat geomeetriat');
-      const center=box.getCenter(new THREE.Vector3());const size=box.getSize(new THREE.Vector3());
-      const radius=Math.max(size.length()*.5,.1);
-      const distance=Math.max(radius/Math.sin(THREE.MathUtils.degToRad(camera.fov/2))*1.35,.5);
-      controls.target.copy(center);
-      camera.position.copy(center).add(new THREE.Vector3(distance*.7,distance*.45,distance*.8));
-      camera.near=Math.max(.001,distance/1000);camera.far=Math.max(100,distance*100);camera.updateProjectionMatrix();controls.update();
-      mixer=new THREE.AnimationMixer(model);
-      for(const clip of g.animations||[])actions[clip.name]=mixer.clipAction(clip);
-      if(actions.Idle_Breathe)actions.Idle_Breathe.play();
-      document.querySelectorAll('button[data-a]').forEach(b=>{b.disabled=false;b.onclick=()=>{Object.values(actions).forEach(a=>a.stop());const a=actions[b.dataset.a];if(a){a.reset().play();report('Animatsioon: '+b.textContent)}else report('Animatsiooni ei leitud: '+b.dataset.a)}});
-      report('Mudel laaditud ✓ · '+Object.keys(actions).length+' animatsiooni · suurus '+size.toArray().map(n=>n.toFixed(2)).join(' × '));
-    }catch(e){fail('GLB töötlemine: '+e.message);console.error(e)}
-  },p=>{if(p.total)report('Laadin GLB: '+Math.round(p.loaded/p.total*100)+'%')},e=>{completed=true;clearTimeout(timeout);fail('GLB laadimine: '+(e.message||e));console.error(e)});
-  window.addEventListener('resize',()=>{const w=Math.max(host.clientWidth,1),h=Math.max(host.clientHeight,1);camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h)});
-}catch(e){fail(e.message||String(e));console.error(e)}
+const host=document.getElementById('stage'),fallback=document.getElementById('fallback');
+function fail(e){const msg=e?.stack||e?.message||String(e);report('VIGA: '+msg);fallback.style.display='flex';fallback.textContent='Mudelit ei õnnestunud kuvada. Vaata all diagnostikat.';console.error(e)}
+async function withTimeout(promise,ms,label){let timer;try{return await Promise.race([promise,new Promise((_,reject)=>{timer=setTimeout(()=>reject(new Error(label+' ületas '+Math.round(ms/1000)+' sekundi piiri')),ms)})])}finally{clearTimeout(timer)}}
+async function main(){
+ report('Laadin Three.js mooduleid…');
+ const THREE=await withTimeout(import('three'),20000,'Three.js import');
+ const [{OrbitControls},{GLTFLoader}]=await withTimeout(Promise.all([import('three/addons/controls/OrbitControls.js'),import('three/addons/loaders/GLTFLoader.js')]),20000,'Three.js lisamoodulid');
+ report('Moodulid olemas. Kontrollin WebGL-i…');
+ const test=document.createElement('canvas');if(!(test.getContext('webgl2')||test.getContext('webgl')))throw Error('WebGL puudub');
+ const scene=new THREE.Scene();const w=Math.max(1,host.clientWidth),h=Math.max(1,host.clientHeight);
+ const camera=new THREE.PerspectiveCamera(40,w/h,.01,1000);camera.position.set(3,2,4);
+ const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));renderer.setSize(w,h);renderer.outputColorSpace=THREE.SRGBColorSpace;host.insertBefore(renderer.domElement,fallback);
+ scene.add(new THREE.HemisphereLight(0xe3d8ff,0x3b2255,2.3));const light=new THREE.DirectionalLight(0xffffff,3);light.position.set(3,6,5);scene.add(light);const fill=new THREE.DirectionalLight(0x77fff1,1.2);fill.position.set(-3,2,-3);scene.add(fill);
+ const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.minDistance=.1;controls.maxDistance=1000;
+ const clock=new THREE.Clock();let mixer=null;const actions={};
+ let frames=0;function frame(){requestAnimationFrame(frame);try{const delta=Math.min(clock.getDelta(),.05);mixer?.update(delta);controls.update();renderer.render(scene,camera);frames++}catch(e){if(frames>=0){frames=-999999;fail(e)}}}frame();
+ report('WebGL töötab. Alustan GLB eraldi allalaadimist…');
+ const url='./beastkin_v2.glb?fix=5';const controller=new AbortController();const abort=setTimeout(()=>controller.abort(),30000);
+ let response,buffer;try{
+   response=await fetch(url,{cache:'no-store',signal:controller.signal});
+   report('HTTP staatus: '+response.status+' '+response.statusText+'; tüüp: '+(response.headers.get('content-type')||'teadmata'));
+   if(!response.ok)throw Error('GLB HTTP '+response.status);
+   buffer=await response.arrayBuffer();
+ }finally{clearTimeout(abort)}
+ report('GLB alla laaditud: '+buffer.byteLength+' baiti');
+ if(buffer.byteLength<20)throw Error('GLB liiga väike');
+ const view=new DataView(buffer);const magic=view.getUint32(0,true),version=view.getUint32(4,true),declared=view.getUint32(8,true);
+ report('GLB päis: magic=0x'+magic.toString(16)+', versioon='+version+', päise pikkus='+declared);
+ if(magic!==0x46546c67||version!==2)throw Error('GLB päis ei ole glTF 2.0');
+ if(declared!==buffer.byteLength)throw Error('GLB päise pikkus '+declared+' ei vasta tegelikule '+buffer.byteLength);
+ report('GLB korrektne. Alustan GLTFLoader.parse()…');
+ const loader=new GLTFLoader();const gltf=await withTimeout(new Promise((resolve,reject)=>loader.parse(buffer,'',resolve,reject)),20000,'GLTFLoader.parse');
+ report('GLTF parse õnnestus; animatsioone: '+(gltf.animations||[]).length);
+ const model=gltf.scene;if(!model)throw Error('GLB stseen puudub');scene.add(model);model.updateMatrixWorld(true);
+ const box=new THREE.Box3().setFromObject(model);if(box.isEmpty())throw Error('Mudelil puudub nähtav geomeetria');
+ const center=box.getCenter(new THREE.Vector3()),size=box.getSize(new THREE.Vector3());const radius=Math.max(size.length()*.5,.1);
+ const distance=Math.max(radius/Math.sin(THREE.MathUtils.degToRad(camera.fov/2))*1.3,.5);
+ controls.target.copy(center);camera.position.copy(center).add(new THREE.Vector3(distance*.7,distance*.45,distance*.8));camera.near=Math.max(.001,distance/1000);camera.far=Math.max(100,distance*100);camera.updateProjectionMatrix();controls.update();
+ mixer=new THREE.AnimationMixer(model);for(const clip of gltf.animations||[])actions[clip.name]=mixer.clipAction(clip);
+ const idle=actions.Idle_Breathe;if(idle)idle.play();
+ document.querySelectorAll('button[data-a]').forEach(b=>{b.disabled=!actions[b.dataset.a];b.onclick=()=>{Object.values(actions).forEach(a=>a.stop());const action=actions[b.dataset.a];if(action){action.reset().play();report('Animatsioon: '+b.textContent)}}});
+ report('MUDEL NÄHTAV ✓ · '+Object.keys(actions).length+' animatsiooni · mõõtmed '+size.toArray().map(v=>v.toFixed(2)).join(' × '));
+ window.addEventListener('resize',()=>{const width=Math.max(host.clientWidth,1),height=Math.max(host.clientHeight,1);camera.aspect=width/height;camera.updateProjectionMatrix();renderer.setSize(width,height)});
+}
+main().catch(fail);
 </script></body></html>
