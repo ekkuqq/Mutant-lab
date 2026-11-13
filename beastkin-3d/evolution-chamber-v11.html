@@ -1,14 +1,161 @@
 <!doctype html>
-<html lang="et"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Mutant Lab · Evolution Chamber V1.1</title>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Mutant Lab · Evolution Chamber V1.1</title>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/"}}</script>
 <style>
 :root{color-scheme:dark;--mint:#65f8e3;--violet:#c38cff;--panel:#17112bd9}*{box-sizing:border-box}body{margin:0;background:#090613;color:#f4eaff;font:15px system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh;background-image:radial-gradient(ellipse at 50% 30%,#392060 0%,#150d2b 48%,#080611 85%)}.top{padding:19px 20px 7px;text-align:center}.eyebrow{color:var(--mint);font-size:11px;letter-spacing:.28em;font-weight:800}.top h1{font-size:clamp(23px,4.8vw,34px);margin:6px 0 3px;letter-spacing:.07em}.top p{margin:0;color:#bca9d8;font-size:13px}.shell{max-width:1100px;margin:0 auto;padding:12px}.viewer{position:relative;height:min(66vh,650px);min-height:390px;overflow:hidden;border:1px solid #7455a35e;border-radius:25px;background:radial-gradient(ellipse at 50% 80%,#3e276f66,transparent 58%),linear-gradient(#150d2a,#090719);box-shadow:0 30px 90px #0009,inset 0 0 70px #8c57da10;touch-action:none}.viewer:before{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(90deg,transparent 0,transparent 73px,#b69dff06 74px),linear-gradient(180deg,#a05cff09,transparent 45%);z-index:1}.viewer canvas{position:absolute;inset:0;display:block;width:100%;height:100%}.corner{position:absolute;z-index:2;pointer-events:none}.tl{left:20px;top:18px}.tr{right:20px;top:18px;text-align:right}.bl{left:20px;bottom:20px}.kicker{font-size:10px;letter-spacing:.2em;color:#ad94cf}.specimen{font-size:20px;font-weight:800;letter-spacing:.05em}.level{color:var(--mint);font-weight:800;font-size:12px}.hint{font-size:12px;color:#b8a5d0}.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#69f9d4;box-shadow:0 0 14px #69f9d4;margin-right:6px}#status{position:absolute;z-index:4;left:50%;bottom:64px;transform:translateX(-50%);padding:10px 18px;border:1px solid #9a77c56e;border-radius:11px;background:#150e2be8;text-align:center;max-width:90%;font-size:12px}.toolbar{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:16px 0}.toolbar button,.evo button{border:1px solid #8e61c9;background:#271841;color:#f4eaff;padding:11px 16px;border-radius:12px;font:inherit;cursor:pointer;transition:.2s}.toolbar button:hover,.toolbar button.active{background:#7340a7;border-color:#cf9aff;box-shadow:0 0 20px #a264d044}.evo{border:1px solid #624d8c77;border-radius:17px;padding:16px;background:#130e26b3}.evohead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}.evohead strong{letter-spacing:.08em}.evohead span{color:#aa9ac6;font-size:12px}.stages{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.stages button{min-width:0;padding:12px 6px;background:#1d1534;border-color:#5c467d;color:#b6a6d0}.stages button.selected{background:linear-gradient(120deg,#3d275e,#184c52);border-color:#71e9dc;color:white}.stages button:disabled{cursor:not-allowed;opacity:.48}.stages small{display:block;font-size:10px;margin-top:4px;color:#b4a6d0}.foot{text-align:center;font-size:11px;color:#9383b2;padding:13px 4px 20px}@media(max-width:520px){.shell{padding:8px}.viewer{height:59vh;min-height:360px;border-radius:17px}.tl{left:13px;top:14px}.tr{right:13px;top:14px}.specimen{font-size:17px}.bl{left:13px;bottom:14px}.stages{gap:6px}.stages button{font-size:12px}.toolbar{gap:7px}.toolbar button{padding:10px 11px;font-size:12px}}
+.progress-panel{border:1px solid #624d8c77;border-radius:18px;padding:20px;margin-bottom:14px;background:linear-gradient(120deg,#1e1436dd,#0e2730a6)}.progress-top{display:flex;align-items:end;justify-content:space-between;gap:12px}.progress-top h2{margin:6px 0 14px;font-size:22px}.xp-numbers{font-weight:800;color:var(--mint);padding-bottom:16px}.xp-track{height:14px;background:#0d0a1a;border:1px solid #6a5688;border-radius:99px;overflow:hidden}.xp-fill{height:100%;width:0%;background:linear-gradient(90deg,#7b50e3,#65f8e3);border-radius:99px;transition:width .3s}.train-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:16px 0}.train-row button{border:1px solid #a77bdb;background:#593187;color:white;border-radius:12px;padding:12px 18px;cursor:pointer;font-weight:700}.train-row button:disabled{opacity:.45;cursor:not-allowed}.train-row button small{display:block;font-size:10px;color:#c7fef3}.train-row #challenge{background:#23505b}.train-row #trainMessage{color:#bba7d7;font-size:12px;flex:1;min-width:170px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.stats>div{padding:11px;background:#100d23aa;border:1px solid #664a8c55;border-radius:11px}.stats span{display:block;font-size:10px;color:#b9a4d3;letter-spacing:.1em}.stats strong{display:block;font-size:20px;margin-top:4px;color:white}.evo-note{color:#b6a3d3;font-size:12px;margin:12px 0 0}.save-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 3px;color:#b2a1c9;font-size:11px}.save-row button{background:transparent;border:1px solid #5b476f;border-radius:8px;color:#bba4d4;padding:7px 10px;cursor:pointer}@media(max-width:520px){.progress-panel{padding:13px}.stats{gap:5px}.stats>div{padding:8px 6px}.stats strong{font-size:16px}.progress-top h2{font-size:18px}.save-row{align-items:start}} 
+.dna-panel{border:1px solid #624d8c77;border-radius:17px;padding:17px;margin:14px 0;background:linear-gradient(110deg,#1b1234cc,#0e3031aa)}.dna-title{display:flex;justify-content:space-between;gap:10px;color:#d7c7f4;font-size:13px;letter-spacing:.1em}.dna-title span{color:var(--mint);font-size:11px}.dna-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:12px}.dna-stats>div{background:#0b1023bb;border:1px solid #65538b66;border-radius:11px;padding:12px}.dna-stats span{display:block;color:#b6a7d0;font-size:10px;letter-spacing:.1em}.dna-stats strong{font-size:21px;color:white}.evo button.unlocked:not(.selected){border-color:#8060b3;color:#eadbff}.evo button.selected{box-shadow:0 0 18px #55e8d733}#evoFlash{position:fixed;inset:0;z-index:30;pointer-events:none;opacity:0;background:radial-gradient(circle,#83fff5b8 0%,#ae74ff55 30%,transparent 68%)}#evoFlash.play{animation:evoBurst 1.15s ease-out}@keyframes evoBurst{0%{opacity:0}22%{opacity:.85}100%{opacity:0}}@media(max-width:520px){.dna-stats{gap:5px}.dna-stats>div{padding:8px}.dna-stats strong{font-size:17px}}
+
+.combat{border:1px solid #66509c99;border-radius:19px;background:linear-gradient(135deg,#1c1438ee,#102d38db);padding:20px;margin:0 0 14px}.combat-head{display:flex;justify-content:space-between;gap:15px;align-items:center}.combat-head h2{margin:5px 0;font-size:23px}.combat-head p,.battle-note{font-size:12px;color:#b9aed2}.currency{font-size:10px;letter-spacing:.1em;color:#80f9e8;text-align:right}.currency strong{display:block;font-size:25px}.arena{display:grid;grid-template-columns:1fr 64px 1fr;gap:12px;align-items:center;margin:16px 0}.fighter{border:1px solid #74559a8a;background:#0e0b22bb;border-radius:15px;padding:15px;min-width:0}.fighter-name{font-size:13px;font-weight:800;letter-spacing:.05em}.fighter-name small{font-size:10px;color:#ac9bc8;font-weight:400;margin-left:5px}.health{height:12px;background:#3c213f;border:1px solid #73547d;border-radius:20px;overflow:hidden;margin:11px 0 4px}.health>div{height:100%;width:100%;background:linear-gradient(90deg,#22c5a4,#7fffe4);transition:width .35s}.foe .health>div{background:linear-gradient(90deg,#f24c94,#ffa278)}.health-numbers{font-size:11px;color:#d1c1e8}.fighter-figure{font-size:56px;text-align:center;padding:10px}.versus{text-align:center;color:#e9b7ff;font-weight:900;font-size:19px}.versus small{display:block;font-size:9px;color:#8ef5e7;margin-top:8px}.battle-actions{display:flex;flex-wrap:wrap;gap:8px}.battle-actions button{cursor:pointer;border:1px solid #8d63bb;background:#32214c;color:#f5edff;border-radius:10px;padding:11px 14px;font-weight:700}.battle-actions button.primary{background:#205b60;border-color:#61f7e6}.battle-actions button:disabled{opacity:.38;cursor:not-allowed}.battle-actions small{display:block;font-size:10px;font-weight:400;color:#cbb8e0}.battle-log{margin-top:14px;max-height:145px;overflow:auto;background:#0a091bd9;border:1px solid #59477777;border-radius:11px;padding:12px;font-size:12px;color:#d8cbe9}.battle-log>div{margin:3px 0}.battle-log>div:first-child{color:#85ffeb}@media(max-width:520px){.combat{padding:12px}.arena{grid-template-columns:1fr 30px 1fr;gap:5px}.fighter{padding:9px}.fighter-name{font-size:11px}.fighter-figure{font-size:35px}.versus{font-size:13px}.combat-head h2{font-size:19px}.battle-actions button{padding:10px;font-size:12px}}
+
+/* V1.1 3D arena */
+.arena3d{position:relative;height:clamp(270px,39vw,410px);border:1px solid #7655a47a;border-radius:16px;overflow:hidden;margin:15px 0 10px;background:radial-gradient(ellipse at 50% 80%,#25465b 0%,#1a1539 47%,#0a0920 100%)}
+.arena3d canvas{display:block;width:100%;height:100%}.arena3d .arena-status{position:absolute;left:12px;top:12px;z-index:2;color:#b9fff5;font-size:11px;letter-spacing:.06em;background:#0a1026b9;padding:8px 11px;border:1px solid #548c9c66;border-radius:9px;pointer-events:none}.arena3d .arena-caption{position:absolute;bottom:12px;left:12px;right:12px;display:flex;justify-content:space-between;gap:8px;color:#e9d9ff;font-size:11px;pointer-events:none}.arena3d .arena-caption span{background:#090b20a8;padding:6px 10px;border-radius:8px}.arena3d .arena-float{position:absolute;z-index:4;font-weight:900;font-size:27px;transform:translate(-50%,0);pointer-events:none;text-shadow:0 2px 12px #000;animation:damageRise 1s ease-out forwards}.arena3d .arena-float.player{left:29%;top:27%;color:#6cffe8}.arena3d .arena-float.enemy{left:73%;top:27%;color:#ff89ba}@keyframes damageRise{to{opacity:0;transform:translate(-50%,-65px)}}
+@media(max-width:520px){.arena3d{height:280px}.arena3d .arena-caption{font-size:9px}.arena3d .arena-status{font-size:9px}}
 </style></head><body>
-<header class="top"><div class="eyebrow">◈ GENESIS RESEARCH FACILITY ◈</div><h1>🧬 MUTANT LAB</h1><p>EVOLUTION CHAMBER · REFINED BEASTKIN V1.1</p></header>
-<main class="shell"><section id="stage" class="viewer" aria-label="Beastkini 3D-vaatur"><div class="corner tl"><div class="kicker">SPECIMEN 001</div><div class="specimen">BEASTKIN</div><div class="level">LV. 01 · HATCHLING</div></div><div class="corner tr"><div class="kicker"><span class="dot"></span>CHAMBER ONLINE</div><div class="hint">360° INTERACTIVE</div></div><div class="corner bl"><div class="kicker">DNA STABILITY</div><div class="level">● ● ● ● ● &nbsp; STABLE</div></div><div id="status">Laadin parandatud Beastkini mudelit…</div></section>
-<div class="toolbar" aria-label="Animatsioonid"><button data-a="Idle_Breathe" class="active">✦ Hingamine</button><button data-a="Attack_Lunge">⚔ Rünnak</button><button data-a="Victory_Bounce">★ Võit</button><button id="rotate">⟳ Automaatne pööramine</button></div>
-<section class="evo"><div class="evohead"><strong>EVOLUTION PATH</strong><span>Järgmised vormid tulekul</span></div><div class="stages"><button class="selected" type="button">LV 01<small>Hatchling</small></button><button disabled type="button">LV 10<small>Juvenile</small></button><button disabled type="button">LV 25<small>Alpha</small></button><button disabled type="button">LV 50<small>Ascended</small></button></div></section><div class="foot">Pööra hiire või sõrmega · Suumi rattaga või kahe sõrmega · Evolution Chamber Prototype</div></main>
-<script>window.addEventListener('error',e=>{document.getElementById('status').textContent='Viga: '+e.message});window.addEventListener('unhandledrejection',e=>{document.getElementById('status').textContent='Laadimisviga: '+String(e.reason)});</script>
+<header class="top"><div class="eyebrow">◈ GENESIS RESEARCH FACILITY ◈</div><h1>🧬 MUTANT LAB</h1><p>EVOLUTION CHAMBER · BEASTKIN V1.5 · 3D BATTLE ARENA · XP · DNA</p></header>
+<main class="shell"><section id="stage" class="viewer" aria-label="Beastkin 3D viewer"><div class="corner tl"><div class="kicker">SPECIMEN 001</div><div class="specimen">BEASTKIN</div><div class="level"><span id="levelTag">LV. 01 · HATCHLING</span></div></div><div class="corner tr"><div class="kicker"><span class="dot"></span>CHAMBER ONLINE</div><div class="hint">360° INTERACTIVE</div></div><div class="corner bl"><div class="kicker">DNA STABILITY</div><div class="level">● ● ● ● ● &nbsp; STABLE</div></div><div id="status">Loading the refined Beastkin model…</div></section>
+<div class="toolbar" aria-label="Animations"><button data-a="Idle_Breathe" class="active">✦ Breathe</button><button data-a="Attack_Lunge">⚔ Attack</button><button data-a="Victory_Bounce">★ Victory</button><button id="rotate">⟳ Auto Rotate</button></div>
+<section class="progress-panel" aria-label="Beastkin progression">
+<div class="progress-top"><div><div class="kicker">SPECIMEN PROGRESSION</div><h2 id="progressTitle">Level 1 · Hatchling</h2></div><div class="xp-numbers" id="xpNumbers">0 / 50 XP</div></div>
+<div class="xp-track"><div class="xp-fill" id="xpFill"></div></div>
+<div class="train-row"><button id="train" type="button">⚡ Train Beastkin <small>+25 XP</small></button><button id="challenge" type="button">⚔ Enter PvE Arena <small>Turn-based battle</small></button><div id="trainMessage" aria-live="polite">Train to earn XP and unlock evolutions.</div></div>
+<div class="stats"><div><span>LEVEL</span><strong id="statLevel">1</strong></div><div><span>TOTAL XP</span><strong id="statXP">0</strong></div><div><span>TRAINING SESSIONS</span><strong id="statTrain">0</strong></div><div><span>BATTLES</span><strong id="statBattles">0</strong></div></div>
+</section>
+<section class="combat" id="combat" aria-label="Turn-based PvE arena">
+ <div class="combat-head"><div><div class="kicker">3D ARENA · V1.1</div><h2>FIRST CONTACT</h2><p id="battleSub">Challenge a rogue mutant. Earn XP and DNA for winning.</p></div><div class="currency">DNA FRAGMENTS <strong id="dnaCount">0</strong></div></div>
+ <div class="arena3d" id="arena3d" aria-label="3D battle between Beastkin and enemy"><div class="arena-status" id="arena3dStatus">Preparing 3D fighters…</div><div class="arena-caption"><span>BEASTKIN · ALLY</span><span id="arenaEnemyLabel">VOIDLING · ENEMY</span></div></div>
+ <div class="arena">
+  <div class="fighter ally"><div class="fighter-name">🧬 BEASTKIN <small id="playerForm">Hatchling</small></div><div class="health"><div id="playerBar"></div></div><div class="health-numbers" id="playerHP">100 / 100 HP</div><div class="fighter-figure">🐾</div></div>
+  <div class="versus">VS <small id="turnLabel">READY</small></div>
+  <div class="fighter foe"><div class="fighter-name">☣ <span id="enemyName">VOIDLING</span> <small id="enemyLevel">Lv 1</small></div><div class="health"><div id="enemyBar"></div></div><div class="health-numbers" id="enemyHP">-- / -- HP</div><div class="fighter-figure">👾</div></div>
+ </div>
+ <div class="battle-actions"><button id="startBattle" class="primary">⚔ Start Battle</button><button data-move="strike" disabled>⚔ Strike <small>Reliable damage</small></button><button data-move="power" disabled>✦ Power Burst <small>2-turn cooldown</small></button><button data-move="guard" disabled>🛡 Guard <small>Reduce next hit</small></button><button data-move="heal" disabled>✚ Recover <small>Once per battle</small></button></div>
+ <div class="battle-log" id="battleLog" role="log" aria-live="polite"><div>Choose Start Battle to enter the arena.</div></div>
+ <p class="battle-note">Victory: +90 XP and +15 DNA. Defeat: no rewards. Arena battles are turn-based; the opponent fights back.</p>
+</section>
+<section class="evo"><div class="evohead"><strong>EVOLUTION PATH</strong><span id="evoHint">Reach Lv10 to unlock the next stage</span></div><div class="stages"><button class="selected" data-stage="1" type="button">LV 01<small>Hatchling</small></button><button data-stage="10" type="button" disabled>LV 10<small>Juvenile</small></button><button data-stage="25" type="button" disabled>LV 25<small>Alpha</small></button><button data-stage="50" type="button" disabled>LV 50<small>Ascended</small></button></div><p class="evo-note" id="evoMessage">Reach evolution milestones to transform Beastkin. Select any unlocked form to view it.</p></section>
+<section class="dna-panel" aria-label="Creature attributes"><div class="dna-title"><strong>DNA PROFILE</strong><span id="formLabel">HATCHLING FORM</span></div><div class="dna-stats"><div><span>HP</span><strong id="hpValue">100</strong></div><div><span>ATTACK</span><strong id="atkValue">12</strong></div><div><span>DEFENSE</span><strong id="defValue">10</strong></div><div><span>SPEED</span><strong id="spdValue">14</strong></div></div><p class="evo-note">Evolution bonuses are prototype values. Combat balancing will arrive with PvE.</p></section><div id="evoFlash" aria-hidden="true"></div><div class="save-row"><span>✓ Progress is automatically saved in this browser.</span><button id="reset" type="button">Reset Progress</button></div><div class="foot">Rotate with mouse or touch · Zoom with scroll wheel or pinch · Evolution Chamber Prototype</div></main>
+<script>
+// Gameplay state is separate from the working V1.5 3D renderer.
+const SAVE_KEY='mutant-lab-beastkin-v08';
+const STAGES=[{level:1,name:'Hatchling'},{level:10,name:'Juvenile'},{level:25,name:'Alpha'},{level:50,name:'Ascended'}];
+const MAX_LEVEL=50;
+let viewedStage=null;
+const FORM_STATS={1:[100,12,10,14],10:[145,19,16,18],25:[230,32,27,22],50:[360,48,42,30]};
+function selectForm(level,burst=false){if(level>game.level)return;viewedStage=level;const form=STAGES.find(s=>s.level===level);const values=FORM_STATS[level];['hpValue','atkValue','defValue','spdValue'].forEach((id,i)=>$(id).textContent=values[i]);$('formLabel').textContent=form.name.toUpperCase()+' FORM';$('evoMessage').textContent=form.name+' 3D form active · Level '+level+' evolution.';document.querySelectorAll('[data-stage]').forEach(b=>b.classList.toggle('selected',Number(b.dataset.stage)===level));if(burst){const flash=$('evoFlash');flash.classList.remove('play');void flash.offsetWidth;flash.classList.add('play')}window.dispatchEvent(new CustomEvent('beastkin-form',{detail:{level,burst}}));}
+const xpNeeded=level=>50+(level-1)*25;
+const emptyState=()=>({level:1,xp:0,totalXP:0,trainings:0,battles:0,dna:0,wins:0,losses:0});
+let game=emptyState();
+try{const stored=JSON.parse(localStorage.getItem(SAVE_KEY)||'null');if(stored&&Number.isInteger(stored.level)&&stored.level>=1&&stored.level<=50&&Number.isFinite(stored.xp)&&stored.xp>=0){game={...game,...stored};if(game.level===50)game.xp=0;}}catch(e){console.warn('Could not read saved progress',e)}
+const $=id=>document.getElementById(id);
+const stageFor=level=>STAGES.filter(s=>s.level<=level).at(-1);
+function save(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(game))}catch(e){$('trainMessage').textContent='Saving is not available in this browser.'}}
+function renderGame(){
+ const stage=stageFor(game.level),need=game.level===MAX_LEVEL?1:xpNeeded(game.level);
+ $('progressTitle').textContent=`Level ${game.level} · ${stage.name}`;
+ $('levelTag').textContent=`LV. ${String(game.level).padStart(2,'0')} · ${stage.name.toUpperCase()}`;
+ $('xpNumbers').textContent=game.level===MAX_LEVEL?'MAX LEVEL':`${Math.floor(game.xp)} / ${need} XP`;
+ $('xpFill').style.width=(game.level===MAX_LEVEL?100:Math.min(100,100*game.xp/need))+'%';
+ $('statLevel').textContent=game.level;$('statXP').textContent=game.totalXP;$('statTrain').textContent=game.trainings;$('statBattles').textContent=game.battles;$('dnaCount').textContent=Math.max(0,Math.floor(game.dna||0));
+ document.querySelectorAll('[data-stage]').forEach(btn=>{const unlocked=game.level>=Number(btn.dataset.stage);btn.disabled=!unlocked;btn.classList.toggle('unlocked',unlocked);btn.classList.toggle('selected',Number(btn.dataset.stage)===(viewedStage||stage.level))});
+ const next=STAGES.find(s=>s.level>game.level);
+ $('evoHint').textContent=next?`Next evolution: Lv${next.level} · ${next.name}`:'All evolution stages unlocked!';
+ $('train').disabled=game.level===MAX_LEVEL;
+}
+function gainXP(amount,type){
+ if(game.level>=MAX_LEVEL)return;
+ game.totalXP+=amount;if(type==='train')game.trainings++;else if(type==='battle')game.battles++;
+ game.xp+=amount;let gained=0,unlocked=[];
+ while(game.level<MAX_LEVEL&&game.xp>=xpNeeded(game.level)){
+  game.xp-=xpNeeded(game.level);game.level++;gained++;
+  if(STAGES.some(s=>s.level===game.level))unlocked.push(stageFor(game.level).name);
+ }
+ if(game.level===MAX_LEVEL)game.xp=0;
+ $('trainMessage').textContent=`+${amount} XP${gained?' · '+gained+' level(s) gained!':''}${unlocked.length?' · Evolution unlocked: '+unlocked.join(', '):''}`;
+ save();renderGame();if(unlocked.length)selectForm(stageFor(game.level).level,true);
+}
+$('train').addEventListener('click',()=>gainXP(25,'train'));
+$('challenge').addEventListener('click',()=>{$('combat').scrollIntoView({behavior:'smooth',block:'start'});if(!battle.active)$('battleSub').textContent='Ready to fight? Press Start Battle.'});
+$('reset').addEventListener('click',()=>{if(confirm('Are you sure you want to reset Beastkin’s XP and levels?')){game=emptyState();viewedStage=null;battle.active=false;battle.finished=false;save();renderGame();renderBattle();selectForm(1,true);$('trainMessage').textContent='A new journey begins!'}});
+document.querySelectorAll('[data-stage]').forEach(btn=>btn.addEventListener('click',()=>selectForm(Number(btn.dataset.stage),true)));
+renderGame();selectForm(stageFor(game.level).level);
+
+
+// V1.0 turn-based arena. Battle state is temporary; permanent rewards use the V0.8 save key.
+const battle={active:false,finished:false,turn:0,hp:0,maxHP:0,enemyHP:0,enemyMax:0,enemyAttack:0,guard:false,healUsed:false,powerCooldown:0,enemyName:'Voidling'};
+const clamp=(n,lo,hi)=>Math.max(lo,Math.min(hi,n));
+function logBattle(message){const log=$('battleLog'),line=document.createElement('div');line.textContent=message;log.prepend(line);while(log.children.length>9)log.lastChild.remove()}
+function battleStats(){const base=FORM_STATS[stageFor(game.level).level];return {hp:base[0]+(game.level-stageFor(game.level).level)*3,attack:base[1]+Math.floor(game.level/3),defense:base[2]+Math.floor(game.level/4),speed:base[3]+Math.floor(game.level/5)}}
+function renderBattle(){const stats=battleStats();$('dnaCount').textContent=Math.max(0,Math.floor(game.dna||0));$('playerForm').textContent=stageFor(game.level).name;$('playerHP').textContent=battle.active||battle.finished?`${battle.hp} / ${battle.maxHP} HP`:`${stats.hp} / ${stats.hp} HP`;$('enemyHP').textContent=battle.active||battle.finished?`${battle.enemyHP} / ${battle.enemyMax} HP`:'-- / -- HP';$('enemyName').textContent=battle.enemyName.toUpperCase();$('enemyLevel').textContent='Lv '+Math.max(1,game.level-1);$('playerBar').style.width=(battle.active||battle.finished?100*battle.hp/battle.maxHP:100)+'%';$('enemyBar').style.width=(battle.active||battle.finished?100*battle.enemyHP/battle.enemyMax:100)+'%';$('turnLabel').textContent=battle.active?'TURN '+battle.turn:battle.finished?'FINISHED':'READY';$('startBattle').textContent=battle.active?'↻ Restart Battle':battle.finished?'⚔ New Battle':'⚔ Start Battle';document.querySelectorAll('[data-move]').forEach(b=>{b.disabled=!battle.active||(b.dataset.move==='heal'&&battle.healUsed)||(b.dataset.move==='power'&&battle.powerCooldown>0);if(b.dataset.move==='power')b.querySelector('small').textContent=battle.powerCooldown>0?'Ready in '+battle.powerCooldown+' turn(s)':'2-turn cooldown'});}
+function startBattle(){if(battle.active&&!confirm('Abandon the current battle and restart?'))return;const s=battleStats();battle.active=true;battle.finished=false;battle.turn=1;battle.maxHP=s.hp;battle.hp=s.hp;battle.enemyMax=Math.round(s.hp*.82+18);battle.enemyHP=battle.enemyMax;battle.enemyAttack=Math.round(s.attack*.76+5);battle.guard=false;battle.healUsed=false;battle.powerCooldown=0;battle.enemyName=game.level>=25?'Corrupted Stalker':game.level>=10?'Wild Riftling':'Voidling';$('battleLog').replaceChildren();logBattle('A wild '+battle.enemyName+' appears! Your turn.');$('battleSub').textContent='Choose your move. The enemy attacks after every turn.';renderBattle();window.dispatchEvent(new CustomEvent('arena-start',{detail:{enemy:battle.enemyName}}));}
+function finishBattle(won){battle.active=false;battle.finished=true;game.battles=(Number(game.battles)||0)+1;if(won){game.wins=(Number(game.wins)||0)+1;game.dna=(Number(game.dna)||0)+15;logBattle('VICTORY! +90 XP · +15 DNA.');gainXP(90,'reward');$('trainMessage').textContent='Arena victory! +90 XP and +15 DNA.';window.dispatchEvent(new CustomEvent('beastkin-animation',{detail:{name:'Victory_Bounce'}}));}else{game.losses=(Number(game.losses)||0)+1;logBattle('DEFEAT. Recover and try again. No rewards.');save();renderGame()}$('battleSub').textContent=won?'Victory! Your rewards were saved.':'Defeat. Start another battle to try again.';renderBattle();window.dispatchEvent(new CustomEvent('arena-finish',{detail:{won}}));}
+function moveBattle(move){if(!battle.active)return;const s=battleStats();let dmg=0;if(move==='strike'){dmg=Math.max(1,Math.round(s.attack*1.12-battle.enemyAttack*.18));logBattle('Beastkin uses Strike for '+dmg+' damage.')}else if(move==='power'){dmg=Math.max(1,Math.round(s.attack*1.75-battle.enemyAttack*.12));battle.powerCooldown=3;logBattle('Beastkin uses Power Burst for '+dmg+' damage!')}else if(move==='guard'){battle.guard=true;logBattle('Beastkin braces for the next attack.')}else if(move==='heal'){battle.healUsed=true;const healed=Math.min(battle.maxHP-battle.hp,Math.max(18,Math.round(battle.maxHP*.3)));battle.hp+=healed;logBattle('Beastkin recovers '+healed+' HP.')}battle.enemyHP=clamp(battle.enemyHP-dmg,0,battle.enemyMax);window.dispatchEvent(new CustomEvent('arena-move',{detail:{move,damage:dmg}}));if(dmg)window.dispatchEvent(new CustomEvent('beastkin-animation',{detail:{name:'Attack_Lunge'}}));if(battle.enemyHP<=0){finishBattle(true);return}const enemyGuard=move==='guard';const raw=Math.max(4,Math.round(battle.enemyAttack*1.12-s.defense*.22));const enemyDamage=enemyGuard?Math.max(1,Math.floor(raw*.3)):raw;battle.hp=clamp(battle.hp-enemyDamage,0,battle.maxHP);window.dispatchEvent(new CustomEvent('arena-counter',{detail:{damage:enemyDamage}}));logBattle(battle.enemyName+' strikes back for '+enemyDamage+' damage'+(enemyGuard?' (guarded).':'.'));battle.guard=false;if(battle.hp<=0){finishBattle(false);return}battle.turn++;if(battle.powerCooldown>0)battle.powerCooldown--;renderBattle();}
+$('startBattle').addEventListener('click',startBattle);document.querySelectorAll('[data-move]').forEach(b=>b.addEventListener('click',()=>moveBattle(b.dataset.move)));renderBattle();
+
+window.addEventListener('error',e=>{document.getElementById('status').textContent='Error: '+e.message});window.addEventListener('unhandledrejection',e=>{document.getElementById('status').textContent='Loading error: '+String(e.reason)});</script>
+
+<script type="module">
+// V1.1 standalone 3D battle scene. Does not change the V1.5 Evolution Chamber renderer.
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+const arena=document.getElementById('arena3d');
+const indicator=document.getElementById('arena3dStatus');
+let renderer,scene,camera,ally,enemy,allyMixer,allyActions={},enemyBaseY=0;
+let tick=0,hitEnemy=0,hitAlly=0,attackTime=0,attackType='',endTime=0,won=false;
+const effects=[];
+const palette={purple:0x8b4dcb,deep:0x29164f,mint:0x63ffed,pink:0xff63ab};
+function material(color,glow=0){return new THREE.MeshStandardMaterial({color,roughness:.43,metalness:.18,emissive:color,emissiveIntensity:glow})}
+function mesh(parent,geo,mat,x,y,z,sx=1,sy=1,sz=1){const o=new THREE.Mesh(geo,mat);o.position.set(x,y,z);o.scale.set(sx,sy,sz);parent.add(o);return o}
+function orb(parent,x,y,z,sx,sy,sz,mat){return mesh(parent,new THREE.IcosahedronGeometry(1,2),mat,x,y,z,sx,sy,sz)}
+function ring(x,y,scale,color){const base=new THREE.Group();base.position.set(x,y,0);base.scale.setScalar(scale);scene.add(base);
+ const deck=mesh(base,new THREE.CylinderGeometry(.91,.98,.15,64),material(0x252143),0,0,-.08);deck.rotation.x=Math.PI/2;
+ const glow=new THREE.Mesh(new THREE.TorusGeometry(.84,.024,10,80),new THREE.MeshBasicMaterial({color}));glow.position.z=.02;base.add(glow);
+ const inner=new THREE.Mesh(new THREE.TorusGeometry(.67,.012,8,80),new THREE.MeshBasicMaterial({color,transparent:true,opacity:.55}));inner.position.z=.03;base.add(inner);return base}
+function makeEnemy(){const g=new THREE.Group();const dark=material(palette.deep),violet=material(palette.purple),mint=material(palette.mint,.42),eye=material(palette.pink,.6);
+ orb(g,0,0,1.04,.58,.44,.64,violet);orb(g,0,-.32,1.52,.43,.33,.44,dark);
+ for(const side of [-1,1]){orb(g,side*.37,-.23,.58,.19,.22,.45,dark);orb(g,side*.39,-.47,1.58,.16,.10,.19,eye);
+ const horn=mesh(g,new THREE.ConeGeometry(.16,.55,7),mint,side*.31,-.12,2.12);horn.rotation.y=side*.27;
+ orb(g,side*.18,-.67,1.56,.10,.06,.13,mint)}
+ for(let i=0;i<4;i++){const p=mesh(g,new THREE.ConeGeometry(.12,.35,5),mint,0,.30+i*.12,1.65-i*.19);p.rotation.x=.45}
+ orb(g,0,-.69,1.28,.19,.12,.12,dark);
+ return g}
+function popup(message,side){const d=document.createElement('div');d.className='arena-float '+side;d.textContent=message;arena.append(d);setTimeout(()=>d.remove(),1000)}
+function burst(x,y,z,color,count=14){if(!scene)return;for(let i=0;i<count;i++){const o=new THREE.Mesh(new THREE.IcosahedronGeometry(.055,0),new THREE.MeshBasicMaterial({color,transparent:true,opacity:1}));o.position.set(x,y,z);scene.add(o);effects.push({o,life:.6+Math.random()*.4,vel:new THREE.Vector3((Math.random()-.5)*2,(Math.random()-.5)*2,(Math.random()-.5)*2)})}}
+function moveEffect(type,damage){attackTime=.42;attackType=type;
+ if(type==='strike'||type==='power'){popup('-'+damage,'enemy');hitEnemy=.45;burst(1.55,-.3,1.15,type==='power'?0xb58cff:0x62fff0,type==='power'?30:16);if(allyActions.Attack_Lunge){Object.values(allyActions).forEach(a=>a.stop());allyActions.Attack_Lunge.reset().play();setTimeout(()=>{allyActions.Attack_Lunge?.stop();allyActions.Idle_Breathe?.reset().play()},850)}}
+ else if(type==='guard'){burst(-1.55,-.3,1.2,0x6affeb,12);popup('GUARD','player')}
+ else if(type==='heal'){burst(-1.55,-.3,1.25,0x78ffd0,24);popup('+HP','player')}
+}
+window.addEventListener('arena-start',e=>{endTime=0;hitAlly=0;hitEnemy=0;indicator.textContent='BATTLE ACTIVE · YOUR TURN';document.getElementById('arenaEnemyLabel').textContent=e.detail.enemy.toUpperCase()+' · ENEMY';if(enemy)enemy.visible=true;if(ally)ally.visible=true});
+window.addEventListener('arena-move',e=>moveEffect(e.detail.move,e.detail.damage));
+window.addEventListener('arena-counter',e=>{hitAlly=.45;burst(-1.55,-.35,1.25,0xff719e,15);popup('-'+e.detail.damage,'player')});
+window.addEventListener('arena-finish',e=>{won=e.detail.won;endTime=1.6;indicator.textContent=won?'VICTORY · +90 XP · +15 DNA':'DEFEAT · TRY AGAIN';burst(won?1.55:-1.55,-.3,1.35,won?0x66ffe4:0xff629b,40)});
+try{
+ scene=new THREE.Scene();camera=new THREE.PerspectiveCamera(40,1,.1,100);camera.up.set(0,0,1);camera.position.set(0,-8.8,4.0);camera.lookAt(0,0,1.1);
+ renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));arena.insertBefore(renderer.domElement,arena.firstChild);
+ scene.add(new THREE.HemisphereLight(0xd7c6ff,0x211342,2.2));const light=new THREE.DirectionalLight(0xffffff,2.6);light.position.set(-3,-5,8);scene.add(light);const rim=new THREE.PointLight(0x57fff0,24,10);rim.position.set(2,1,3);scene.add(rim);
+ ring(-1.55,0,1,0x61ffec);ring(1.55,0,1,0xff6cba);
+ enemy=makeEnemy();enemy.position.set(1.55,0,.04);scene.add(enemy);
+ // A simple silhouette remains visible even if the GLB cannot be fetched.
+ ally=new THREE.Group();ally.position.set(-1.55,0,.04);scene.add(ally);
+ const placeholder=orb(ally,0,0,1,.4,.5,.65,material(0x9b6be1));
+ function resize(){const w=Math.max(1,arena.clientWidth),h=Math.max(1,arena.clientHeight);camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h,false)}
+ resize();new ResizeObserver(resize).observe(arena);
+ new GLTFLoader().load('./beastkin_hatchling_v12.glb',g=>{placeholder.visible=false;
+ const model=g.scene;ally.add(model);model.scale.setScalar(.78);
+ // Preserve original Z-up model coordinates and its V1.5 animation clips.
+ allyMixer=new THREE.AnimationMixer(model);for(const clip of g.animations)allyActions[clip.name]=allyMixer.clipAction(clip);allyActions.Idle_Breathe?.play();indicator.textContent='3D FIGHTERS READY · START BATTLE';
+ },undefined,e=>{indicator.textContent='3D model unavailable · check beastkin_hatchling_v12.glb';console.error('Arena GLB:',e)});
+ const clock=new THREE.Clock();function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);tick+=dt;allyMixer?.update(dt);
+ if(enemy){enemy.position.z=.04+Math.sin(tick*2.3)*.045;enemy.rotation.z=Math.sin(tick*1.3)*.05;enemy.scale.setScalar(hitEnemy>0?1+Math.sin(tick*45)*.06:1)}
+ if(ally){ally.position.z=.04+(allyMixer?0:Math.sin(tick*2)*.05);ally.scale.setScalar(hitAlly>0?1+Math.sin(tick*42)*.05:1)}
+ hitEnemy=Math.max(0,hitEnemy-dt);hitAlly=Math.max(0,hitAlly-dt);attackTime=Math.max(0,attackTime-dt);
+ if(endTime>0){endTime-=dt;if(endTime<=0){if(won&&enemy)enemy.visible=false;else if(ally)ally.visible=false}}
+ for(let i=effects.length-1;i>=0;i--){const e=effects[i];e.life-=dt;e.o.position.addScaledVector(e.vel,dt);e.vel.z-=dt*1.7;e.o.material.opacity=Math.min(1,Math.max(0,e.life));if(e.life<=0){scene.remove(e.o);e.o.geometry.dispose();e.o.material.dispose();effects.splice(i,1)}}
+ renderer.render(scene,camera)}animate();
+}catch(e){indicator.textContent='3D arena initialization failed: '+e.message;console.error(e)}
+</script>
 <script type="module">
 import * as THREE from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
@@ -27,9 +174,42 @@ const ringMat=new THREE.MeshBasicMaterial({color:0x69fff0,transparent:true,opaci
 const ring2=new THREE.Mesh(new THREE.TorusGeometry(.83,.01,10,100),new THREE.MeshBasicMaterial({color:0xae78ff,transparent:true,opacity:.7}));ring2.position.z=.075;podium.add(ring2);
 const aura=new THREE.Mesh(new THREE.TorusGeometry(1.43,.007,8,100),new THREE.MeshBasicMaterial({color:0x8653d8,transparent:true,opacity:.35}));aura.position.z=-.12;podium.add(aura);
 const controls=new OrbitControls(camera,renderer.domElement);controls.target.set(0,0,1.15);controls.enableDamping=true;controls.minDistance=2;controls.maxDistance=10;controls.update();
-let mixer,actions={};new GLTFLoader().load('./beastkin_hatchling_refined.glb',g=>{scene.add(g.scene);mixer=new THREE.AnimationMixer(g.scene);for(const clip of g.animations)actions[clip.name]=mixer.clipAction(clip);actions.Idle_Breathe?.play();status.textContent='Beastkin V1.1 valmis ✓';setTimeout(()=>{status.style.display='none'},1800)},p=>{if(p.total)status.textContent='Laadin mudelit: '+Math.round(p.loaded/p.total*100)+'%'},e=>{status.textContent='GLB laadimine ebaõnnestus: '+(e.message||e);console.error(e)});
-document.querySelectorAll('button[data-a]').forEach(b=>b.onclick=()=>{if(!mixer){status.style.display='block';status.textContent='Mudel pole veel laaditud';return}Object.values(actions).forEach(a=>a.stop());actions[b.dataset.a]?.reset().play();document.querySelectorAll('button[data-a]').forEach(x=>x.classList.toggle('active',x===b))});
+let mixer,actions={},activeModel=null,activeForm=0;
+const formMeshes=new Map();
+const mat=(hex,emissive=0,glow=0)=>new THREE.MeshStandardMaterial({color:hex,roughness:.34,metalness:.25,emissive,emissiveIntensity:glow});
+const violet=mat(0x9860df,0x3e1768,.18),cyan=mat(0x65ffeb,0x1ad4cf,.6),gold=mat(0xffd7a3,0xe8a753,.45);
+function sphere(parent,x,y,z,sx,sy,sz,material){const mesh=new THREE.Mesh(new THREE.IcosahedronGeometry(1,1),material);mesh.position.set(x,y,z);mesh.scale.set(sx,sy,sz);parent.add(mesh);return mesh}
+function spike(parent,x,y,z,r,h,material,tilt=0){const mesh=new THREE.Mesh(new THREE.ConeGeometry(r,h,7),material);mesh.position.set(x,y,z);mesh.rotation.x=tilt;parent.add(mesh);return mesh}
+function addFormDetails(root,level){if(level===1)return;
+ // Root-local accessories use the original V1.5 Z-up model coordinates.
+ const size=level===10?1:level===25?1.35:1.65;
+ for(const sign of [-1,1]){
+  spike(root,sign*.35,-.71,2.18,.095*size,.3*size,level===50?gold:cyan,sign*.15);
+  sphere(root,sign*.55,-.1,1.19,.12*size,.21*size,.12*size,level===50?gold:violet);
+  if(level>=25){spike(root,sign*.49,-.11,1.44,.12*size,.36*size,cyan,sign*.18);sphere(root,sign*.56,-.67,1.53,.065,.08,.09,cyan)}
+  if(level===50){spike(root,sign*.18,-.61,2.4,.12,.46,gold,sign*.2);sphere(root,sign*.44,.34,1.4,.09,.3,.12,cyan)}
+ }
+ if(level>=25){for(let i=0;i<4;i++)spike(root,0,.04+i*.24,1.46-i*.06,.085*size,.2*size,level===50?gold:violet,.25)}
+ if(level===50){const halo=new THREE.Mesh(new THREE.TorusGeometry(.59,.025,8,48),new THREE.MeshBasicMaterial({color:0x72fff2,transparent:true,opacity:.8}));halo.position.set(0,-.5,2.47);root.add(halo)}
+}
+function applyForm(level,burst=false){if(!formMeshes.size)return;if(level===activeForm)return;
+ if(mixer){mixer.stopAllAction();mixer.uncacheRoot(activeModel)}
+ if(activeModel)scene.remove(activeModel);const next=formMeshes.get(level);if(!next)return;
+ activeModel=next;activeForm=level;scene.add(activeModel);
+ mixer=new THREE.AnimationMixer(activeModel);actions={};for(const clip of loadedClips)actions[clip.name]=mixer.clipAction(clip);
+ actions.Idle_Breathe?.play();document.querySelectorAll('button[data-a]').forEach(b=>b.classList.toggle('active',b.dataset.a==='Idle_Breathe'));
+ status.style.display='block';status.textContent=STAGES.find(s=>s.level===level).name+' evolution activated!';setTimeout(()=>status.style.display='none',1600);
+}
+let loadedClips=[];
+window.addEventListener('beastkin-form',e=>applyForm(e.detail.level,e.detail.burst));
+new GLTFLoader().load('./beastkin_hatchling_v12.glb',g=>{
+ loadedClips=g.animations;
+ for(const form of STAGES){const root=g.scene.clone(true);const factor={1:1,10:1.10,25:1.20,50:1.30}[form.level];root.scale.setScalar(factor);root.position.z=-.024*(factor-1);root.traverse(obj=>{if(obj.isMesh){obj.material=obj.material.clone();if(form.level>=25&&obj.material.color){obj.material.color.lerp(new THREE.Color(form.level===50?0xc2a3ff:0xb987ff),form.level===50?.19:.09)}}});addFormDetails(root,form.level);formMeshes.set(form.level,root)}
+ applyForm(viewedStage||stageFor(game.level).level);
+},p=>{if(p.total)status.textContent='Loading Beastkin: '+Math.min(100,Math.round(p.loaded/p.total*100))+'%'},e=>{status.textContent='Failed to load GLB: '+(e.message||e);console.error(e)});
+window.addEventListener('beastkin-animation',e=>{const a=actions[e.detail.name];if(a){Object.values(actions).forEach(x=>x.stop());a.reset().play();a.clampWhenFinished=true;a.setLoop(THREE.LoopOnce,1);const idle=actions.Idle_Breathe;if(idle)setTimeout(()=>{if(mixer){a.stop();idle.reset().play()}},850)}});
+document.querySelectorAll('button[data-a]').forEach(b=>b.onclick=()=>{if(!mixer){status.style.display='block';status.textContent='Model has not loaded yet';return}Object.values(actions).forEach(a=>a.stop());actions[b.dataset.a]?.reset().play();document.querySelectorAll('button[data-a]').forEach(x=>x.classList.toggle('active',x===b))});
 const spinButton=document.getElementById('rotate');spinButton.onclick=()=>{controls.autoRotate=!controls.autoRotate;controls.autoRotateSpeed=1.2;spinButton.classList.toggle('active',controls.autoRotate)};
-const clock=new THREE.Clock();function loop(){requestAnimationFrame(loop);mixer?.update(clock.getDelta());controls.update();ring.rotation.z+=.002;ring2.rotation.z-=.0015;aura.rotation.z+=.001;renderer.render(scene,camera)}loop();window.addEventListener('resize',()=>{camera.aspect=host.clientWidth/host.clientHeight;camera.updateProjectionMatrix();renderer.setSize(host.clientWidth,host.clientHeight)});
-}catch(e){status.textContent='3D käivitamise viga: '+(e.message||e);console.error(e)}
+const clock=new THREE.Clock();function loop(){requestAnimationFrame(loop);mixer?.update(Math.min(clock.getDelta(),.05));controls.update();ring.rotation.z+=.002;ring2.rotation.z-=.0015;aura.rotation.z+=.001;renderer.render(scene,camera)}loop();window.addEventListener('resize',()=>{camera.aspect=host.clientWidth/host.clientHeight;camera.updateProjectionMatrix();renderer.setSize(host.clientWidth,host.clientHeight)});
+}catch(e){status.textContent='3D initialization error: '+(e.message||e);console.error(e)}
 </script></body></html>
